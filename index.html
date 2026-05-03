@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Evaluación Técnica: Data Centers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fce4ec 0%, #fff3e0 50%, #e0f2f1 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, sans-serif;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quiz-wrapper {
+            max-width: 880px;
+            width: 100%;
+            margin: 0 auto;
+            background: #fffffff0;
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
+            padding: 1.8rem;
+            transition: all 0.2s;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            border-bottom: 4px solid #ff8c42;
+            padding-bottom: 0.7rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #1e6f9f, #e67e22);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.2px;
+        }
+
+        .sub {
+            color: #e67e22;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+            font-weight: 600;
+        }
+
+        .progress-area {
+            background: #e6e0f0;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #1a4a6e;
+            font-weight: 700;
+        }
+
+        .question-counter {
+            font-weight: 800;
+            background: #ffcc88;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            color: #5a3a1a;
+        }
+
+        .score-badge {
+            background: #88ccaa;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 700;
+            color: #1a4a2e;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-left: 8px solid #ff8c42;
+            border-right: 1px solid #f0e0d0;
+        }
+
+        .question-text {
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: #2c3e66;
+            margin-bottom: 1.2rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            cursor: pointer;
+            padding: 0.6rem 0.8rem;
+            border-radius: 1rem;
+            background: #fefaf5;
+            border: 2px solid #e0d0c0;
+            transition: all 0.15s;
+        }
+
+        .option:hover {
+            background: #fff4e6;
+            border-color: #ffaa66;
+            transform: scale(1.01);
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid #e67e22;
+            border-radius: 50%;
+            margin-top: 0.1rem;
+            cursor: pointer;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        input[type="radio"]:checked {
+            background-color: #e67e22;
+            border-color: #e67e22;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        .option label {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            cursor: pointer;
+            color: #2c3e66;
+            font-weight: 600;
+        }
+
+        .feedback {
+            margin-top: 0.8rem;
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            background: #fef7e8;
+            border-left: 5px solid;
+            line-height: 1.4;
+            color: #2c3e50;
+        }
+
+        .feedback.correct {
+            border-left-color: #44aa66;
+            background: #e0ffe8;
+        }
+
+        .feedback.incorrect {
+            border-left-color: #ff6666;
+            background: #ffe6e6;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            border: none;
+            background: #ddd0c0;
+            color: #4a3a2a;
+            font-weight: 800;
+            padding: 0.6rem 1.3rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: #3a86ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2a6ad0;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #e67e22;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #d46a10;
+        }
+
+        .btn-reset {
+            background: #cc6644;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #aa4422;
+        }
+
+        .btn-success {
+            background: #44aa66;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #338855;
+        }
+
+        .results-area {
+            margin-top: 1.5rem;
+            background: #fff2e0;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 2px solid #ffaa33;
+            display: none;
+        }
+
+        .results-area h3 {
+            color: #cc5500;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-summary {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: bold;
+            color: #1f4a2e;
+        }
+
+        .result-detail {
+            max-height: 280px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+
+        .result-item {
+            padding: 0.4rem;
+            border-bottom: 1px solid #ffd9a0;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 1.2rem;
+            color: #aa8855;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-wrapper {
+                padding: 1rem;
+            }
+            .question-text {
+                font-size: 0.98rem;
+            }
+            .option label {
+                font-size: 0.88rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-wrapper">
+    <div class="header">
+        <h1>🏢 Infraestructura y Diagnóstico de Data Centers</h1>
+        <div class="sub">Racks, UPS, redes, almacenamiento y alta disponibilidad</div>
+    </div>
+
+    <div class="progress-area">
+        <span class="question-counter" id="questionCounter">Pregunta 1 / 20</span>
+        <span class="score-badge" id="liveScore">✅ Aciertos: 0</span>
+    </div>
+
+    <div id="questionContainer"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn" class="btn btn-secondary">◀ Anterior</button>
+        <button id="nextBtn" class="btn btn-primary">Siguiente ▶</button>
+        <button id="resetBtn" class="btn btn-reset">⟳ Reiniciar</button>
+        <button id="finalScoreBtn" class="btn btn-success">📊 Ver total</button>
+    </div>
+
+    <div id="resultsPanel" class="results-area"></div>
+    <footer>📌 Selecciona una opción → retroalimentación inmediata. Al finalizar, revisa tu puntuación.</footer>
+</div>
+
+<script>
+    // ==================== DATOS DEL CUESTIONARIO (20 preguntas) ====================
+    const questionsData = [
+        { text: "Durante una auditoría de rendimiento, se detectan micro-latencias intermitentes en la comunicación entre servidores situados en diferentes VLANs dentro del mismo chasis de switch. ¿Qué componente o tecnología debería inspeccionarse primero para garantizar una conmutación de baja latencia (sub-microsegundo)?",
+          options: ["El estado de las colas de prioridad QoS en Capa 2.", "La integridad de las tablas TCAM para el enrutamiento inter-VLAN por hardware.", "La configuración del protocolo LACP para la agregación de enlaces.", "La segmentación lógica de los dominios de broadcast en el estándar 802.1Q."],
+          correct: "b",
+          explanation: "Correcta (b): El enrutamiento inter-VLAN se realiza mediante tablas TCAM en Capa 3 para evitar latencia de routers externos, permitiendo conmutación cut-through de 0.5µs."
+        },
+        { text: "Un administrador de red reporta errores de CRC recurrentes en un enlace de datos que corre paralelo a la acometida eléctrica principal dentro de un rack de 4 postes. ¿Cuál es la causa física más probable según los estándares de mejores prácticas?",
+          options: ["Incumplimiento de la certificación TIA-568 para el cableado Cat.6a.", "Incompatibilidad entre los rieles telescópicos y el flujo de aire.", "Violación de la regla de separación mínima de 20 cm para evitar EMI.", "Uso de un rack de 2 postes en lugar de un estándar EIA-310 de 42U."],
+          correct: "c",
+          explanation: "Correcta (c): La 'Regla de Oro' exige separación mínima de 20 cm entre cableado de red y eléctrico para evitar EMI."
+        },
+        { text: "Se produce un corte de energía total en el edificio. Los servidores se apagan instantáneamente a pesar de tener un UPS de respaldo. Al revisar el log del UPS, este indica 'Modo Bypass activo'. ¿Por qué falló la protección?",
+          options: ["El UPS era de 'Doble Conversión' y tardó 10ms en transferir la carga.", "El sistema CRAC/CRAH no envió la señal de apagado ordenado.", "El UPS era de tipo 'Offline' o no aisló correctamente la carga de la red pública.", "La PDU inteligente bloqueó el encendido remoto de los servidores."],
+          correct: "c",
+          explanation: "Correcta (c): Un UPS 'Offline' (típico doméstico) o un bypass mal configurado no garantiza continuidad; el UPS de doble conversión tiene transferencia cero."
+        },
+        { text: "En un entorno de alta densidad (>10 kW/rack), se observa un aumento crítico de temperatura en la parte superior del rack, aunque el aire acondicionado funciona al máximo. ¿Qué estrategia de diseño falta para mejorar la eficiencia (PUE <1.2)?",
+          options: ["Aumentar la velocidad de los ventiladores hot-swap de los servidores.", "Implementar una contención de pasillos (frío/caliente) para evitar la mezcla de aire.", "Cambiar todos los procesadores Xeon por arquitecturas de múltiples sockets.", "Instalar PDUs básicas en lugar de PDUs con sensores de corriente por fase."],
+          correct: "b",
+          explanation: "Correcta (b): La contención de pasillos evita la mezcla de aire caliente/frío, drástica para eficiencia energética y control de puntos calientes."
+        },
+        { text: "Un servidor de base de datos crítico sufre un reinicio inesperado. El log de hardware registra un 'Correctable ECC Memory Error' seguido de un 'Uncorrectable Error'. ¿Qué capacidad de la memoria falló en prevenir la caída?",
+          options: ["La arquitectura multichip del procesador EPYC.", "La función SECDED (Single Error Correction, Double Error Detection).", "El caché FBWC de la controladora de almacenamiento.", "El aislamiento de ejecución en el Sandboxing del firewall."],
+          correct: "b",
+          explanation: "Correcta (b): ECC usa SECDED para corregir errores de un bit; un error de doble bit es no corregible y causa caída para evitar corrupción."
+        },
+        { text: "Una SAN (Storage Area Network) está experimentando cuellos de botella en la escritura. Se propone cambiar de iSCSI a una solución de mayor rendimiento. Según la evolución de topologías, ¿cuál sería la ruta de actualización más lógica para una latencia sub-100µs?",
+          options: ["Migrar a discos internos SAS con 2M horas MTBF.", "Implementar cabinas externas JBOD conectadas por cableado Cat.7.", "Transicionar a una arquitectura NVMe All-Flash con conectividad Fibre Channel.", "Añadir supercondensadores a las controladoras DAS existentes."],
+          correct: "c",
+          explanation: "Correcta (c): NVMe ofrece latencias sub-100µs y altas tasas de transferencia, estándar para Data Centers de alto rendimiento."
+        },
+        { text: "Un analista de seguridad nota que el tráfico malicioso cifrado en el puerto 443 está evadiendo el firewall. ¿Qué característica técnica de un NGFW es indispensable activar para mitigar esto?",
+          options: ["Inspección profunda de paquetes (DPI) solo en el Header.", "Análisis de payload mediante inspección SSL/TLS (descifrado/recifrado).", "Configuración de un clúster Active/Passive para alta disponibilidad.", "Segmentación de red mediante VLANs 802.1Q."],
+          correct: "b",
+          explanation: "Correcta (b): Los NGFW pueden descifrar e inspeccionar tráfico HTTPS (SSL/TLS) para detectar amenazas ocultas."
+        },
+        { text: "Se requiere conectar dos switches de núcleo en una arquitectura spine-leaf a una distancia de 2 kilómetros. ¿Qué combinación de transceptor y medio es la única técnicamente viable?",
+          options: ["SFP+ con Fibra Multimodo OM3.", "QSFP28 con Fibra Monomodo OS2.", "Módulos hot-pluggable con cableado Cat.8.", "Cross Connects con Fibra Multimodo OM4."],
+          correct: "b",
+          explanation: "Correcta (b): Fibra monomodo (OS2) cubre distancias kilométricas; multimodo se limita a ~300m."
+        },
+        { text: "Al diseñar un Data Center Tier III, ¿cuál es el requisito mínimo para la distribución de energía en cada rack que garantice el mantenimiento concurrente?",
+          options: ["Una PDU básica conectada a un UPS offline.", "PDUs de alta densidad (>10kW) con conexiones trifásicas y redundancia.", "Una sola PDU inteligente con capacidad de reinicio remoto.", "Cableado de red Cat.6a certificado bajo TIA-568."],
+          correct: "b",
+          explanation: "Correcta (b): Tier III/IV exige alta densidad y arquitecturas que soporten fallos o mantenimiento sin interrupción, con redundancia N+1."
+        },
+        { text: "Durante un pico de tráfico, un switch de capa 3 empieza a descartar paquetes. Al revisar, se observa que el ancho de banda total no está saturado. ¿Qué otro factor de diseño de 'Las Arterias' podría estar causando el problema?",
+          options: ["El uso de transceptores SFP de solo 10 Gbps.", "Un tiempo de transferencia de UPS mayor a 0ms.", "Exceder el límite de 128 VLANs activas típicas en producción.", "Interferencia EMI por falta de separación de 20 cm."],
+          correct: "c",
+          explanation: "Correcta (c): Superar las capacidades de la tabla de conmutación (más de 128 VLANs activas) puede generar degradación."
+        },
+        { text: "Se necesita reemplazar un ventilador en un servidor en producción sin apagar el equipo. ¿Qué característica de hardware de 'Grado Data Center' debe poseer el componente?",
+          options: ["Arquitectura de múltiples sockets.", "Memoria ECC con registro de errores.", "Capacidad Hot-swap (intercambio en caliente).", "Almacenamiento masivo tipo DAS."],
+          correct: "c",
+          explanation: "Correcta (c): La redundancia N+1 en fuentes y ventiladores hot-swap permite mantenimiento sin interrupción del servicio."
+        },
+        { text: "Un administrador desea automatizar el reinicio físico de un servidor colgado que no responde a comandos por red (SSH/RDP). ¿Qué dispositivo de la infraestructura permite esto de forma remota?",
+          options: ["Un switch L3 con tablas TCAM.", "Una PDU inteligente (Switched).", "Un transceptor QSFP28.", "Un panel de parcheo de alta densidad."],
+          correct: "b",
+          explanation: "Correcta (b): Las PDUs inteligentes permiten encendido/apagado remoto individual de cada toma, clave para reinicios físicos a distancia."
+        },
+        { text: "En una arquitectura de red moderna, se busca eliminar el 'cuello de botella' de los routers tradicionales que solo analizan el Header. ¿Qué solución técnica propone el material?",
+          options: ["Usar switches de Capa 2 con LACP.", "Implementar NGFW con inspección profunda (DPI) que abre el Payload.", "Cambiar a cableado de fibra óptica multimodo OM3.", "Utilizar UPS de doble conversión para estabilizar el voltaje."],
+          correct: "b",
+          explanation: "Correcta (b): El router tradicional solo escanea el Header; el NGFW realiza Inspección Profunda de Paquetes (DPI) abriendo el Payload."
+        },
+        { text: "Se está planificando la consolidación física de un centro de datos. Si se dispone de un rack estándar de 42U, ¿cuál es la altura total disponible para equipos en milímetros?",
+          options: ["1000,50 mm.", "1866,90 mm.", "2100,00 mm.", "44,45 mm."],
+          correct: "b",
+          explanation: "Correcta (b): Cada U = 44,45 mm. 42U * 44,45 mm = 1866,9 mm."
+        },
+        { text: "Una controladora de almacenamiento pierde energía repentinamente antes de escribir los datos en los discos. ¿Qué componente evita que los 'datos en vuelo' se pierdan permanentemente?",
+          options: ["Las unidades NVMe de baja latencia.", "El supercondensador del caché FBWC (Flash Backed Write Cache).", "El sistema de climatización CRAC.", "La segmentación por VLANs."],
+          correct: "b",
+          explanation: "Correcta (b): El caché FBWC usa un supercondensador para proteger datos en vuelo ante cortes, escribiéndolos en memoria no volátil."
+        },
+        { text: "Para mejorar el rendimiento de la red en una arquitectura *spine-leaf*, se decide agrupar 4 carriles de 25 Gbps. ¿Qué estándar de transceptor se está describiendo?",
+          options: ["SFP+ de 10 Gbps.", "RJ-45 Cat.6a.", "QSFP28 de 100 Gbps.", "Fibra Monomodo OS2."],
+          correct: "c",
+          explanation: "Correcta (c): QSFP28 combina 4 carriles de 25 Gbps para un puerto único de 100 Gbps, estándar en arquitecturas de alto rendimiento."
+        },
+        { text: "Un centro de datos reporta una disponibilidad de 'cinco nueves' (99.999%). Según la matriz de evolución, ¿cuál es el tiempo máximo de caída permitido al año para esta categoría?",
+          options: ["8.7 horas.", "Menos de 52 minutos.", "Cero minutos (disponibilidad absoluta).", "24 horas."],
+          correct: "b",
+          explanation: "Correcta (b): Disponibilidad 99.99%+ (Tier III/IV) implica menos de 52 minutos de caída anual."
+        },
+        { text: "¿Cuál es la principal ventaja técnica de utilizar un rack de 4 postes frente a uno de 2 postes en un entorno Enterprise?",
+          options: ["Mayor facilidad para el cableado doméstico Cat.6a.", "Soporte completo con rieles telescópicos para mantenimiento sin desmontaje.", "Reducción automática de la interferencia electromagnética (EMI).", "Capacidad nativa para alojar antenas Wi-Fi 7."],
+          correct: "b",
+          explanation: "Correcta (b): Los racks de 4 postes permiten rieles telescópicos, facilitando mantenimiento de hardware pesado sin extraerlo del rack."
+        },
+        { text: "En el diseño de 'El Sistema Inmune', se implementa un clúster de firewalls. Si el nodo primario falla y las sesiones de los usuarios se mantienen activas sin corte, ¿qué configuración se ha aplicado correctamente?",
+          options: ["Un firewall tradicional que solo escanea Headers.", "Un clúster Active/Passive con sesiones *stateful* sincronizadas.", "Una arquitectura de microsegmentación Zero Trust.", "Un sistema de Sandboxing para archivos sospechosos."],
+          correct: "b",
+          explanation: "Correcta (b): La alta disponibilidad en clústeres Active/Passive mantiene sesiones stateful sin cortes ante fallo del nodo primario."
+        },
+        { text: "Se requiere instalar un servidor que combine una gran capacidad de almacenamiento local y múltiples GPUs para IA. ¿Qué factor de forma de rack es el más adecuado según el compromiso entre expansión y densidad?",
+          options: ["1U: Máxima densidad.", "2U: Equilibrio expansión/refrigeración.", "4U: Almacenamiento masivo y GPU.", "Blade / Hyperconvergente."],
+          correct: "c",
+          explanation: "Correcta (c): El formato 4U está diseñado para albergar grandes arreglos de almacenamiento y GPUs que requieren más espacio y refrigeración."
+        }
+    ];
+
+    let userAnswers = new Array(20).fill(null);
+    let currentIndex = 0;
+
+    const questionContainer = document.getElementById('questionContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const finalScoreBtn = document.getElementById('finalScoreBtn');
+    const questionCounterSpan = document.getElementById('questionCounter');
+    const liveScoreSpan = document.getElementById('liveScore');
+    const resultsPanel = document.getElementById('resultsPanel');
+
+    function updateLiveScore() {
+        let correctCount = 0;
+        for (let i = 0; i < userAnswers.length; i++) {
+            if (userAnswers[i] && userAnswers[i] === questionsData[i].correct) correctCount++;
+        }
+        liveScoreSpan.textContent = `✅ Aciertos: ${correctCount} / 20`;
+        return correctCount;
+    }
+
+    function saveAnswer(selectedLetter) {
+        userAnswers[currentIndex] = selectedLetter;
+        updateLiveScore();
+        renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+        const q = questionsData[currentIndex];
+        const selected = userAnswers[currentIndex];
+        const letters = ['a', 'b', 'c', 'd'];
+        let optionsHtml = '';
+        q.options.forEach((opt, idx) => {
+            const letter = letters[idx];
+            const isChecked = (selected === letter);
+            optionsHtml += `
+                <div class="option" data-letter="${letter}">
+                    <input type="radio" name="question" value="${letter}" id="opt_${letter}" ${isChecked ? 'checked' : ''}>
+                    <label for="opt_${letter}"><strong>${letter.toUpperCase()})</strong> ${opt}</label>
+                </div>
+            `;
+        });
+
+        let feedbackHtml = '';
+        if (selected) {
+            const isCorrect = (selected === q.correct);
+            const correctLetter = q.correct;
+            const correctText = q.options[letters.indexOf(correctLetter)];
+            const explanation = q.explanation;
+            if (isCorrect) {
+                feedbackHtml = `<div class="feedback correct">✅ <strong>¡Correcto!</strong> ${explanation}</div>`;
+            } else {
+                feedbackHtml = `<div class="feedback incorrect">❌ <strong>Incorrecto.</strong> La respuesta correcta es ${correctLetter.toUpperCase()}) ${correctText}.<br>${explanation}</div>`;
+            }
+        } else {
+            feedbackHtml = `<div class="feedback" style="border-left-color:#ffcc88; background:#fff5e6;">⚡ Selecciona una opción para ver la retroalimentación.</div>`;
+        }
+
+        const html = `
+            <div class="question-card">
+                <div class="question-text">${q.text}</div>
+                <div class="options" id="optionsContainer">
+                    ${optionsHtml}
+                </div>
+                ${feedbackHtml}
+            </div>
+        `;
+        questionContainer.innerHTML = html;
+
+        // Event listeners
+        const optionDivs = document.querySelectorAll('.option');
+        optionDivs.forEach(div => {
+            const radio = div.querySelector('input[type="radio"]');
+            const letter = div.getAttribute('data-letter');
+            if (radio) {
+                radio.addEventListener('change', () => {
+                    if (radio.checked) saveAnswer(letter);
+                });
+            }
+            div.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    const radioInside = div.querySelector('input');
+                    if (radioInside && !radioInside.checked) {
+                        radioInside.checked = true;
+                        saveAnswer(letter);
+                    }
+                }
+            });
+        });
+
+        questionCounterSpan.textContent = `Pregunta ${currentIndex+1} / 20`;
+    }
+
+    function showFinalResults() {
+        let correctCount = 0;
+        let detailsHtml = '';
+        for (let i = 0; i < questionsData.length; i++) {
+            const q = questionsData[i];
+            const userAns = userAnswers[i];
+            const isCorrect = (userAns === q.correct);
+            if (isCorrect) correctCount++;
+            const statusIcon = isCorrect ? '✅' : '❌';
+            const userShow = userAns ? userAns.toUpperCase() : '—';
+            const correctShow = q.correct.toUpperCase();
+            detailsHtml += `
+                <div class="result-item">
+                    <span style="min-width: 30px;">${statusIcon}</span>
+                    <span><strong>Pregunta ${i+1}</strong> (Tu respuesta: ${userShow} / Correcta: ${correctShow})</span>
+                </div>
+            `;
+        }
+        const percent = Math.round((correctCount / 20) * 100);
+        resultsPanel.innerHTML = `
+            <h3>📊 Resultado final</h3>
+            <div class="result-summary">🎯 Aciertos: ${correctCount} de 20 (${percent}%)</div>
+            <div class="result-detail">${detailsHtml}</div>
+            <button id="closeResultsBtn" class="btn btn-secondary" style="margin-top: 10px; width:100%;">✖ Cerrar resumen</button>
+        `;
+        resultsPanel.style.display = 'block';
+        document.getElementById('closeResultsBtn')?.addEventListener('click', () => {
+            resultsPanel.style.display = 'none';
+        });
+        alert(`📊 Cuestionario completado.\nAciertos: ${correctCount} de 20 (${percent}%)\nRevisa el resumen detallado en pantalla.`);
+    }
+
+    function nextQuestion() {
+        if (currentIndex < 19) {
+            currentIndex++;
+            renderCurrentQuestion();
+        } else {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (confirm(`Aún tienes ${unanswered} pregunta(s) sin responder. ¿Deseas finalizar de todas formas? Las no respondidas se contarán como incorrectas.`)) {
+                    showFinalResults();
+                }
+            } else {
+                showFinalResults();
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderCurrentQuestion();
+        } else {
+            alert("Ya estás en la primera pregunta.");
+        }
+    }
+
+    function resetQuiz() {
+        if (confirm("¿Reiniciar todo el cuestionario? Se perderán todas las respuestas.")) {
+            userAnswers = new Array(20).fill(null);
+            currentIndex = 0;
+            resultsPanel.style.display = 'none';
+            updateLiveScore();
+            renderCurrentQuestion();
+        }
+    }
+
+    prevBtn.addEventListener('click', prevQuestion);
+    nextBtn.addEventListener('click', nextQuestion);
+    resetBtn.addEventListener('click', resetQuiz);
+    finalScoreBtn.addEventListener('click', showFinalResults);
+
+    renderCurrentQuestion();
+    updateLiveScore();
+</script>
+</body>
+</html>
